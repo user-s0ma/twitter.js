@@ -340,7 +340,7 @@ class Client {
       'User-Agent': userAgent
     };
     await clientTransaction.init(http, ctHeaders);
-  }
+  };
 
   const tid = await clientTransaction.generateTransactionId("GET", new URL('https://twitter.com/i/js_inst?c_name=ui_metrics').pathname);
   console.log(tid);
