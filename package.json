@@ -1,0 +1,16 @@
+{
+  "name": "https-com",
+  "version": "2024.04.20",
+  "type": "module",
+  "private": true,
+  "license": "UNLICENSED",
+  "dependencies": {
+    "tsx": "4.19.1",
+    "dotenv": "16.4.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.7",
+    "eslint": "^8.57.0"
+  }
+}
