@@ -55,7 +55,7 @@ export default class ClientTransaction {
   }
 
   private validateResponse(response: HTMLElementRepresentation | null): HTMLElementRepresentation {
-    if (!response || typeof response !== 'object') {
+    if (!response || typeof response !== "object") {
       throw new Error("Invalid response");
     }
     return response;
@@ -88,7 +88,7 @@ export default class ClientTransaction {
     const rowIndex = keyBytes[this.DEFAULT_ROW_INDEX] % 16;
     const frameTime = this.DEFAULT_KEY_BYTES_INDICES.reduce((acc, index) => {
       const keyByte = keyBytes[index];
-      if (typeof keyByte !== 'number') {
+      if (typeof keyByte !== "number") {
         throw new Error(`Invalid key byte at index ${index}`);
       }
       return acc * (keyByte % 16);
@@ -186,8 +186,8 @@ export default class ClientTransaction {
     const rotation = interpolate(fromRotation, toRotation, val);
     const matrix = convertRotationToMatrix(rotation[0] as number);
 
-    const hexColor = color.slice(0, 3).map(c => Math.round(c as number).toString(16).padStart(2, '0')).join('');
-    const hexMatrix = matrix.map(value => floatToHex(Math.abs(value))).join('');
+    const hexColor = color.slice(0, 3).map(c => Math.round(c as number).toString(16).padStart(2, "0")).join("");
+    const hexMatrix = matrix.map(value => floatToHex(Math.abs(value))).join("");
 
     return `${hexColor}${hexMatrix}00`;
   }

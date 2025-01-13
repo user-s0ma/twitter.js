@@ -17,12 +17,12 @@ export default class JSDOMParser {
   }
 
   private parseHTML(html: string): HTMLElementRepresentation {
-    const cleanHtml = html.replace(/^\s*<!DOCTYPE[^>]*>/i, '');
+    const cleanHtml = html.replace(/^\s*<!DOCTYPE[^>]*>/i, "");
 
     const rootElement: HTMLElementRepresentation = {
-      tag: 'root',
+      tag: "root",
       attributes: {},
-      content: '',
+      content: "",
       children: [],
       full: html,
       getAttribute(attrName: string): string | null {
@@ -59,7 +59,7 @@ export default class JSDOMParser {
       }
     };
 
-    const withoutComments = cleanHtml.replace(/<!--[\s\S]*?-->/g, '');
+    const withoutComments = cleanHtml.replace(/<!--[\s\S]*?-->/g, "");
 
     const elementRegex = /<([a-zA-Z0-9-]+)([^>]*)>([\s\S]*?)<\/\1>|<([a-zA-Z0-9-]+)([^>]*?)\s*\/?>/g;
     const attrRegex = /([a-zA-Z0-9-]+)(?:=["']([^"']*)["'])?/g;
@@ -68,13 +68,13 @@ export default class JSDOMParser {
     while ((match = elementRegex.exec(withoutComments)) !== null) {
       const [fullMatch, tag1, attrs1, content, tag2, attrs2] = match;
       const tag = tag1 || tag2;
-      const attrs = attrs1 || attrs2 || '';
+      const attrs = attrs1 || attrs2 || "";
 
       const attributes: Record<string, string> = {};
       let attrMatch;
       while ((attrMatch = attrRegex.exec(attrs)) !== null) {
         const [_, name, value] = attrMatch;
-        attributes[name] = value || '';
+        attributes[name] = value || "";
       }
 
       const element: HTMLElementRepresentation = {
@@ -159,7 +159,7 @@ export default class JSDOMParser {
     }
 
     return (element: HTMLElementRepresentation): boolean => {
-      if (tagName !== '*' && element.tag.toLowerCase() !== tagName.toLowerCase()) {
+      if (tagName !== "*" && element.tag.toLowerCase() !== tagName.toLowerCase()) {
         return false;
       }
 

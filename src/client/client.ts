@@ -1,8 +1,7 @@
 import ClientTransaction from "./x_client_transaction/transaction";
 import FetchClient from "./fetch_client";
 
-const TOKEN = 'AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA'
-const DOMAIN = 'x.com'
+const TOKEN = "AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA"
 
 class Client {
   private language: string;
@@ -18,7 +17,7 @@ class Client {
   private v11: V11Client;
 
   constructor(
-    language: string = 'en-US',
+    language: string = "en-US",
     proxy: string | null = null,
     captchaSolver: Capsolver | null = null,
     userAgent: string | null = null,
@@ -27,7 +26,7 @@ class Client {
     this.language = language;
     this.proxy = proxy;
     this.captchaSolver = captchaSolver;
-    this.userAgent = userAgent || 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_6_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15';
+    this.userAgent = userAgent || "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_6_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15";
 
     if (this.captchaSolver) {
       this.captchaSolver.client = this;
@@ -53,17 +52,17 @@ class Client {
     if (!this.clientTransaction.homePageResponse) {
       const cookiesBackup = { ...this.getCookies() };
       const ctHeaders = {
-        'Accept-Language': `${this.language},${this.language.split('-')[0]};q=0.9`,
-        'Cache-Control': 'no-cache',
-        'Referer': `https://${DOMAIN}`,
-        'User-Agent': this.userAgent
+        "Accept-Language": `${this.language},${this.language.split("-")[0]};q=0.9`,
+        "Cache-Control": "no-cache",
+        "Referer": "https://x.com",
+        "User-Agent": this.userAgent
       };
       await this.clientTransaction.init(this.http, ctHeaders);
       this.setCookies(cookiesBackup, true);
     }
 
     const tid = this.clientTransaction.generateTransactionId(method, new URL(url).pathname);
-    headers['X-Client-Transaction-Id'] = tid;
+    headers["X-Client-Transaction-Id"] = tid;
 
     const cookiesBackup = { ...this.getCookies() };
     const response: any = await this.http.request(method, url, { ...options, headers });
@@ -76,7 +75,7 @@ class Client {
       responseData = await response.text();
     }
 
-    if (responseData && typeof responseData === 'object' && 'errors' in responseData) {
+    if (responseData && typeof responseData === "object" && "errors" in responseData) {
       const errorCode = responseData.errors[0]?.code;
       const errorMessage = responseData.errors[0]?.message;
       if (errorCode === 37 || errorCode === 64) {
@@ -85,9 +84,7 @@ class Client {
 
       if (errorCode === 326) {
         if (!this.captchaSolver) {
-          throw new Error(
-            `Account Locked: Visit https://${DOMAIN}/account/access to unlock it.`
-          );
+          throw new Error("Account Locked: Visit https://x.com/account/access to unlock it.");
         }
         if (autoUnlock) {
           await this.unlock();
@@ -119,7 +116,7 @@ class Client {
   private removeDuplicateCt0Cookie(): void {
     const cookieArray = Array.from(this.http.cookies.entries());
     for (const [name, value] of cookieArray) {
-      if (name === 'ct0' && this.http.cookies.has('ct0')) {
+      if (name === "ct0" && this.http.cookies.has("ct0")) {
         continue;
       }
       this.http.cookies.set(name, value);
@@ -144,13 +141,13 @@ class Client {
     const flow = new Flow(this, guestToken);
 
     await flow.executeTask({
-      params: { flow_name: 'login' },
+      params: { flow_name: "login" },
       data: {
         input_flow_data: {
           flow_context: {
             debug_overrides: {},
             start_location: {
-              location: 'splash_screen'
+              location: "splash_screen"
             }
           }
         },
@@ -200,64 +197,64 @@ class Client {
       }
     });
 
-    await flow.ssoInit('apple');
+    await flow.ssoInit("apple");
     await flow.executeTask({
-      subtask_id: 'LoginJsInstrumentationSubtask',
+      subtask_id: "LoginJsInstrumentationSubtask",
       js_instrumentation: {
         response: await this._uiMetrics(),
-        link: 'next_link'
+        link: "next_link"
       }
     });
 
     await flow.executeTask({
-      subtask_id: 'LoginEnterUserIdentifierSSO',
+      subtask_id: "LoginEnterUserIdentifierSSO",
       settings_list: {
         setting_responses: [
           {
-            key: 'user_identifier',
+            key: "user_identifier",
             response_data: {
               text_data: { result: authInfo1 }
             }
           }
         ],
-        link: 'next_link'
+        link: "next_link"
       }
     });
 
-    if (flow.taskId === 'LoginEnterAlternateIdentifierSubtask') {
+    if (flow.taskId === "LoginEnterAlternateIdentifierSubtask") {
       await flow.executeTask({
-        subtask_id: 'LoginEnterAlternateIdentifierSubtask',
+        subtask_id: "LoginEnterAlternateIdentifierSubtask",
         enter_text: {
           text: authInfo2,
-          link: 'next_link'
+          link: "next_link"
         }
       });
     }
 
-    if (flow.taskId === 'DenyLoginSubtask') {
+    if (flow.taskId === "DenyLoginSubtask") {
       throw new Error(flow.response.subtasks[0].cta.secondary_text.text);
     }
 
     await flow.executeTask({
-      subtask_id: 'LoginEnterPassword',
+      subtask_id: "LoginEnterPassword",
       enter_password: {
         password,
-        link: 'next_link'
+        link: "next_link"
       }
     });
 
-    if (flow.taskId === 'DenyLoginSubtask') {
+    if (flow.taskId === "DenyLoginSubtask") {
       throw new Error(flow.response.subtasks[0].cta.secondary_text.text);
     }
 
-    if (flow.taskId === 'LoginAcid') {
+    if (flow.taskId === "LoginAcid") {
       console.log(flow.response.subtasks[0].cta.secondary_text.text);
 
       await flow.executeTask({
-        subtask_id: 'LoginAcid',
+        subtask_id: "LoginAcid",
         enter_text: {
-          text: prompt('>>> '),
-          link: 'next_link'
+          text: prompt(">>> "),
+          link: "next_link"
         }
       });
 
@@ -265,9 +262,9 @@ class Client {
     }
 
     await flow.executeTask({
-      subtask_id: 'AccountDuplicationCheck',
+      subtask_id: "AccountDuplicationCheck",
       check_logged_in_account: {
-        link: 'AccountDuplicationCheck_false'
+        link: "AccountDuplicationCheck_false"
       }
     });
 
@@ -277,20 +274,20 @@ class Client {
 
     this._userId = flow.response.subtasks.find((task: any) => task.id_str)?.id_str || null;
 
-    if (flow.taskId === 'LoginTwoFactorAuthChallenge') {
+    if (flow.taskId === "LoginTwoFactorAuthChallenge") {
       let totpCode;
       if (!totpSecret) {
         console.log(flow.response.subtasks[0].cta.secondary_text.text);
-        totpCode = prompt('>>> ');
+        totpCode = prompt(">>> ");
       } else {
         totpCode = new TOTP(totpSecret).generate();
       }
 
       await flow.executeTask({
-        subtask_id: 'LoginTwoFactorAuthChallenge',
+        subtask_id: "LoginTwoFactorAuthChallenge",
         enter_text: {
           text: totpCode,
-          link: 'next_link'
+          link: "next_link"
         }
       });
     }
@@ -304,9 +301,9 @@ class Client {
   }
 
   private async _uiMetrics(): Promise<string> {
-    const js: any = await this.http.request('GET', `https://twitter.com/i/js_inst?c_name=ui_metrics`);
+    const js: any = await this.http.request("GET", `https://twitter.com/i/js_inst?c_name=ui_metrics`);
     const match = js.data.match(/return ({[\s\S]*?});/);
-    return match ? match[1] : '';
+    return match ? match[1] : "";
   }
 
   private getCookies(): Map<string, string> {
@@ -327,22 +324,22 @@ class Client {
 }
 
 (async () => {
-  const language = 'en-US'
-  const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_6_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15';
+  const language = "en-US"
+  const userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_6_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15";
   const http = new FetchClient();
   const clientTransaction = new ClientTransaction();
 
   if (!clientTransaction.homePageResponse) {
     const ctHeaders = {
-      'Accept-Language': `${language},${language.split('-')[0]};q=0.9`,
-      'Cache-Control': 'no-cache',
-      'Referer': `https://${DOMAIN}`,
-      'User-Agent': userAgent
+      "Accept-Language": `${language},${language.split("-")[0]};q=0.9`,
+      "Cache-Control": "no-cache",
+      "Referer": "https://x.com",
+      "User-Agent": userAgent
     };
     await clientTransaction.init(http, ctHeaders);
   };
 
-  const tid = await clientTransaction.generateTransactionId("GET", new URL('https://twitter.com/i/js_inst?c_name=ui_metrics').pathname);
+  const tid = await clientTransaction.generateTransactionId("GET", new URL("https://twitter.com/i/js_inst?c_name=ui_metrics").pathname);
   console.log(tid);
 })();
 

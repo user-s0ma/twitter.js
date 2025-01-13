@@ -10,15 +10,15 @@ export default class FetchSessionClient {
   private getCookieHeader(): string {
     return Array.from(this.cookies.entries())
       .map(([key, value]) => `${key}=${value}`)
-      .join('; ');
+      .join("; ");
   }
 
   private setCookiesFromResponse(headers: Headers): void {
-    const setCookieHeader = headers.get('set-cookie');
+    const setCookieHeader = headers.get("set-cookie");
     if (setCookieHeader) {
-      setCookieHeader.split(',').forEach(cookieString => {
-        const [cookiePair] = cookieString.split(';');
-        const [key, value] = cookiePair.split('=');
+      setCookieHeader.split(",").forEach(cookieString => {
+        const [cookiePair] = cookieString.split(";");
+        const [key, value] = cookiePair.split("=");
         if (key && value) {
           this.cookies.set(key.trim(), value.trim());
         }
@@ -48,8 +48,8 @@ export default class FetchSessionClient {
 
     const response = await fetch(url, {
       method,
-      redirect: 'follow',
-      credentials: 'include',
+      redirect: "follow",
+      credentials: "include",
       headers,
       body: options.body,
     });

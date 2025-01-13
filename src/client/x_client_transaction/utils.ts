@@ -12,12 +12,12 @@ export async function handleXMigration(session: FetchClient, headers: any): Prom
       const tokenMatch = response.match(/name="tok"\s+value="([^"]+)"/);
       if (tokenMatch) {
           const formData = new URLSearchParams();
-          formData.append('tok', tokenMatch[1]);
+          formData.append("tok", tokenMatch[1]);
           
           response = await session.request("POST", "https://x.com/x/migrate", {
               headers: {
                   ...headers,
-                  'Content-Type': 'application/x-www-form-urlencoded'
+                  "Content-Type": "application/x-www-form-urlencoded"
               },
               body: formData.toString()
           });
