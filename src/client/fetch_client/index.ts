@@ -62,36 +62,4 @@ export default class FetchSessionClient {
 
     return response.text();
   }
-
-  /*
-  public async get<T>(
-    url: string,
-    options: { headers?: Record<string, string>; queryParams?: Record<string, string> } = {}
-  ): Promise<T> {
-    return this.request<T>('GET', url, options);
-  }
-
-  public async post<T>(
-    url: string,
-    body: any,
-    options: { headers?: Record<string, string>; queryParams?: Record<string, string> } = {}
-  ): Promise<T> {
-    return this.request<T>('POST', url, { ...options, body });
-  }
-
-  public async put<T>(
-    url: string,
-    body: any,
-    options: { headers?: Record<string, string>; queryParams?: Record<string, string> } = {}
-  ): Promise<T> {
-    return this.request<T>('PUT', url, { ...options, body });
-  }
-
-  public async delete<T>(
-    url: string,
-    options: { headers?: Record<string, string>; queryParams?: Record<string, string> } = {}
-  ): Promise<T> {
-    return this.request<T>('DELETE', url, options);
-  }
-  */
 }

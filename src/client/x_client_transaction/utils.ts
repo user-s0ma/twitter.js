@@ -1,30 +1,25 @@
 import FetchClient from "../fetch_client";
 
 export async function handleXMigration(session: FetchClient, headers: any): Promise<string> {
-  // 最初のリクエスト
   let response = await session.request("GET", "https://twitter.com", { headers });
   
   const metaRefreshMatch = response.match(/content="0;\s*url\s*=\s*([^"]+)"/);
   if (metaRefreshMatch) {
       const redirectUrl = metaRefreshMatch[1].trim();
       
-      // リダイレクト先へのリクエスト
       response = await session.request("GET", redirectUrl, { headers });
-      
-      // トークンを探す
+
       const tokenMatch = response.match(/name="tok"\s+value="([^"]+)"/);
       if (tokenMatch) {
-          // FormDataではなくURLSearchParamsを使用
           const formData = new URLSearchParams();
           formData.append('tok', tokenMatch[1]);
           
-          // POSTリクエストを送信（Content-Typeを設定）
           response = await session.request("POST", "https://x.com/x/migrate", {
               headers: {
                   ...headers,
                   'Content-Type': 'application/x-www-form-urlencoded'
               },
-              body: formData.toString()  // URLSearchParamsをstring化
+              body: formData.toString()
           });
       }
   }
