@@ -545,7 +545,7 @@ export class Client {
     is_long_video: boolean,
     options: Record<string, any> = {}
   ): Promise<[any, Response]> {
-    const endpoint = is_long_video 
+    const endpoint = is_long_video
       ? 'https://upload.x.com/i/media/upload2.json'
       : 'https://upload.x.com/i/media/upload.json';
     return await this.uploadMedia(method, endpoint, options);
