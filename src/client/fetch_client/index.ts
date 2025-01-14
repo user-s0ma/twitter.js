@@ -30,11 +30,11 @@ export default class FetchSessionClient {
     method: string,
     url: string,
     options: {
-      headers?: Record<string, string>;
+      headers?: Record<string, string | undefined>;
       body?: string | FormData;
       queryParams?: Record<string, string>;
     } = {}
-  ): Promise<string> {
+  ): Promise<Response> {
     const headers: Record<string, string> = {
       ...this.defaultHeaders,
       ...options.headers,
@@ -60,6 +60,6 @@ export default class FetchSessionClient {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return response.text();
+    return response;
   }
 }

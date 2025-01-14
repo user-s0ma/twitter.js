@@ -2,14 +2,16 @@ import FetchClient from "../fetch_client";
 
 export async function handleXMigration(session: FetchClient, headers: any): Promise<string> {
   let response = await session.request("GET", "https://twitter.com", { headers });
+  const text = await response.text();
   
-  const metaRefreshMatch = response.match(/content="0;\s*url\s*=\s*([^"]+)"/);
+  const metaRefreshMatch = text.match(/content="0;\s*url\s*=\s*([^"]+)"/);
   if (metaRefreshMatch) {
       const redirectUrl = metaRefreshMatch[1].trim();
       
       response = await session.request("GET", redirectUrl, { headers });
+      const text = await response.text();
 
-      const tokenMatch = response.match(/name="tok"\s+value="([^"]+)"/);
+      const tokenMatch = text.match(/name="tok"\s+value="([^"]+)"/);
       if (tokenMatch) {
           const formData = new URLSearchParams();
           formData.append("tok", tokenMatch[1]);
@@ -24,7 +26,7 @@ export async function handleXMigration(session: FetchClient, headers: any): Prom
       }
   }
   
-  return response;
+  return response.text();
 }
 
 export function floatToHex(x: number): string {

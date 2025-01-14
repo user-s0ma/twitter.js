@@ -37,8 +37,9 @@ export default class ClientTransaction {
       const onDemandFileUrl = `https://abs.twimg.com/responsive-web/client-web/ondemand.s.${onDemandFile[1]}a.js`;
 
       const onDemandFileResponse = await session.request("GET", onDemandFileUrl, { headers });
+      const onDemandFileText = await onDemandFileResponse.text();
 
-      const matches = Array.from(onDemandFileResponse.matchAll(INDICES_REGEX));
+      const matches = Array.from(onDemandFileText.matchAll(INDICES_REGEX));
 
       for (const match of matches) {
         if (match[2]) {
@@ -128,9 +129,7 @@ export default class ClientTransaction {
       throw new Error("No path elements found in frame");
     }
 
-    // パスの属性から数値を抽出する関数
     const extractNumbers = (pathStr: string): number[] => {
-      // パス文字列から数値を抽出
       const numbers = pathStr.match(/-?\d+(\.\d+)?/g);
       if (!numbers) {
         throw new Error(`No numbers found in path: ${pathStr}`);
